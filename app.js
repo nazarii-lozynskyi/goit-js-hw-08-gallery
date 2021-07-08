@@ -67,7 +67,7 @@ const galleryItems = [
 const refs = {
   gallery: document.querySelector('.gallery'),
   wrapper: document.querySelector('.lightbox'),
-  wrapperOverlay: document.querySelector('.lightbox__overlay'),
+  backdrop: document.querySelector('.lightbox__overlay'),
   wrapperContent: document.querySelector('.lightbox__content'),
   wrapperImg: document.querySelector('.lightbox__image'),
   closeWrapperButton: document.querySelector('.lightbox__button'),
@@ -120,6 +120,7 @@ function onGalleryItemClick(evt) {
   }
 
   /* Открытие модального окна по клику на элементе галереи. */
+  window.addEventListener('keydown', onEscPress);
   refs.wrapper.classList.add('is-open');
 
   /* Подмена значения атрибута src, alt элемента img.lightbox__image. */
@@ -130,11 +131,35 @@ function onGalleryItemClick(evt) {
 }
 
 /* Закрытие модального окна по клику на кнопку button[data-action="close-lightbox"]. */
+
 refs.closeWrapperButton.addEventListener('click', onCloseWrapper);
 
 function onCloseWrapper() {
   refs.wrapper.classList.remove('is-open');
-
-  /*Очистка значения атрибута src элемента img.lightbox__image.*/
+  window.removeEventListener('keydown', onEscPress);
+  /* Очистка значения атрибута src элемента img.lightbox__image. */
   refs.wrapperImg.src = '';
 }
+
+/* Закрытие модального окна по клику на div.lightbox__overlay. */
+
+refs.backdrop.addEventListener('click', onBackdropClick);
+
+function onBackdropClick(evt) {
+  if (evt.currentTarget === evt.target) {
+    onCloseWrapper();
+  }
+}
+
+/* Закрытие модального окна по нажатию клавиши ESC. */
+
+function onEscPress(evt) {
+  const ESC_KEY_CODE = 'Escape';
+
+  if (evt.code === ESC_KEY_CODE) {
+    onCloseWrapper();
+  }
+  //console.log(evt);
+}
+
+/* Пролистывание изображений галереи в открытом модальном окне клавишами "влево" и "вправо". */
