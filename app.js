@@ -75,8 +75,6 @@ const refs = {
 
 /*Создание и рендер разметки по массиву данных galleryItems из app.js и предоставленному шаблону.*/
 
-console.log(refs.wrapperImg);
-
 const galleryItemsMarkup = createElGalleryMarkup(galleryItems);
 refs.gallery.insertAdjacentHTML('beforeend', galleryItemsMarkup);
 
@@ -90,6 +88,7 @@ function createElGalleryMarkup(galleryItems) {
         href = ${original}
       >
         <img
+          loading="lazy"
           class = "gallery__image"
           src = "${preview}"
           data-source = "${original}"
@@ -101,19 +100,16 @@ function createElGalleryMarkup(galleryItems) {
     })
     .join('');
 }
-console.log(galleryItems);
-
-/*  Отмена действия по умолчанию при клике на ссылку */
-
-refs.gallery.addEventListener('click', function (evt) {
-  evt.preventDefault();
-});
 
 /* Реализация делегирования на галерее ul.js-gallery и получение url большого изображения */
 
 refs.gallery.addEventListener('click', onGalleryItemClick);
 
 function onGalleryItemClick(evt) {
+  /*  Отмена действия по умолчанию при клике на ссылку */
+  evt.preventDefault();
+  /* ****** */
+
   const isGalleryEl = evt.target.classList.contains('gallery__image');
   if (!isGalleryEl) {
     return;
@@ -137,6 +133,7 @@ refs.closeWrapperButton.addEventListener('click', onCloseWrapper);
 function onCloseWrapper() {
   refs.wrapper.classList.remove('is-open');
   window.removeEventListener('keydown', onEscPress);
+
   /* Очистка значения атрибута src элемента img.lightbox__image. */
   refs.wrapperImg.src = '';
 }
@@ -163,3 +160,14 @@ function onEscPress(evt) {
 }
 
 /* Пролистывание изображений галереи в открытом модальном окне клавишами "влево" и "вправо". */
+let arr = [];
+for (let child of refs.gallery.children) {
+  //console.log(child.previousElementSibling);
+  arr.push(child);
+
+  //console.log(child.querySelector('.gallery__image').dataset.source);
+}
+console.log(arr[0]);
+
+// console.log(refs.gallery.firstElementChild);
+// console.log(refs.gallery.lastElementChild);
